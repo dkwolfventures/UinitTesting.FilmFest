@@ -1,14 +1,13 @@
 //
-//  FilmFestTests.swift
+//  MovieLibraryDataServiceTests.swift
 //  FilmFestTests
 //
-//  Created by Coding on 7/28/21.
+//  Created by Coding on 7/30/21.
 //
 
 import XCTest
-@testable import FilmFest
 
-class FilmFestTests: XCTestCase {
+class MovieLibraryDataServiceTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
