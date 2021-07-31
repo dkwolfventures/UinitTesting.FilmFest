@@ -17,6 +17,8 @@ class MovieStructTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
+    
+    //MARK: - init
 
     func testInit_MovieWithTitle(){
         
@@ -32,5 +34,14 @@ class MovieStructTests: XCTestCase {
         XCTAssertNotNil(testMovie)
         XCTAssertEqual(testMovie.releaseDate, "September 11th, 1974")
     }
-
+    
+    //MARK: - Equatable
+    
+    func testEquatable_ReturnsTrue(){
+        let movie1 = Movie(title: "Action")
+        let movie2 = Movie(title: "Action")
+        
+        XCTAssertEqual(movie1, movie2)
+    }
+    
 }
