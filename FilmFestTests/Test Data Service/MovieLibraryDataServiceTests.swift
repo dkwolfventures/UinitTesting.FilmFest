@@ -17,31 +17,31 @@ class MovieLibraryDataServiceTests: XCTestCase {
     
     let fairyTale = Movie(title: "Fairy Tale")
     let thriller = Movie(title: "Thriller")
-    let darkComedy = Movie(title: "Dark Comdedy")
-
-    override func setUpWithError() throws {
+    let darkComedy = Movie(title: "Dark Comedy")
+    
+    override func setUp() {
+        super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         sut = MovieLibraryDataService()
         sut.movieManager = MovieManager()
         
         tableViewMock = TableViewMock.initMock(dataSource: sut)
         
-        libraryVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "LibraryViewControllerID") as? LibraryViewController
-        ///this runs the view controller. you must do this before using any elements from
+        libraryVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LibraryViewControllerID") as? LibraryViewController
         _ = libraryVC.view
         
         libraryTableView = libraryVC.libraryTableView
         libraryTableView.dataSource = sut
         libraryTableView.delegate = sut
     }
-
-    override func tearDownWithError() throws {
+    
+    override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        super.tearDown()
     }
     
-    //MARK: - sections
-    
-    func testTableViewSections_Count_ReturnsTwo(){
+    // MARK: Sections
+    func testTableViewSections_Count_ReturnsTwo() {
         let sections = libraryTableView.numberOfSections
         XCTAssertEqual(sections, 2)
     }
@@ -58,43 +58,35 @@ class MovieLibraryDataServiceTests: XCTestCase {
         XCTAssertEqual(libraryTableView.numberOfRows(inSection: 0), 5)
     }
     
-    func testTableViewSections_SectionTwo_ReturnsMoviesSeenCount(){
+    func testTableViewSections_SectionTwo_ReturnsMoviesSeenCount() {
 //        sut.movieManager?.addMovie(movie: fairyTale)
 //        sut.movieManager?.addMovie(movie: darkComedy)
 //        sut.movieManager?.checkOffMovieAtIndex(index: 0)
-//
 //        XCTAssertEqual(libraryTableView.numberOfRows(inSection: 1), 1)
 //
 //        sut.movieManager?.checkOffMovieAtIndex(index: 0)
 //        libraryTableView.reloadData()
-        
         XCTAssertEqual(libraryTableView.numberOfRows(inSection: 1), 0)
     }
     
-    //MARK: - Cells
-    
-    func testCell_RowAtIndex_ReturnsMovieCell(){
+    // MARK: Cells
+    func testCell_RowAtIndex_ReturnsMovieCell() {
         sut.movieManager?.addMovie(movie: darkComedy)
         libraryTableView.reloadData()
         
         let cellQueried = libraryTableView.cellForRow(at: IndexPath(row: 0, section: 0))
         XCTAssertTrue(cellQueried is MovieCell)
-        
     }
-    
-    func testCell_ShouldDequeueCell(){
-        
+
+    func testCell_ShouldDequeueCell() {
         sut.movieManager?.addMovie(movie: thriller)
-        
         tableViewMock.reloadData()
         _ = tableViewMock.cellForRow(at: IndexPath(row: 0, section: 0))
         
         XCTAssertTrue(tableViewMock.cellDequeuedProperly)
-        
     }
     
-    func testCell_SectionOneConfig_ShouldSetCellData(){
-       
+    func testCell_SectionOneConfig_ShouldSetCellData() {
         sut.movieManager?.addMovie(movie: fairyTale)
         tableViewMock.reloadData()
         
@@ -102,7 +94,7 @@ class MovieLibraryDataServiceTests: XCTestCase {
         XCTAssertEqual(cell.movieData, fairyTale)
     }
     
-    func testCell_SectionTwoConfig_ShouldSetCellData(){
+    func testCell_SectionTwoConfig_ShouldSetCellData() {
         sut.movieManager?.addMovie(movie: darkComedy)
         sut.movieManager?.addMovie(movie: fairyTale)
         sut.movieManager?.checkOffMovieAtIndex(index: 0)
@@ -112,11 +104,10 @@ class MovieLibraryDataServiceTests: XCTestCase {
         XCTAssertEqual(cell.movieData, darkComedy)
     }
     
-    func testCell_Selection_ShouldCheckOffSelectedMovie(){
+    func testCell_Selection_ShouldCheckOffSelectedMovie() {
         sut.movieManager?.addMovie(movie: fairyTale)
         sut.movieManager?.addMovie(movie: darkComedy)
-        sut.movieManager?.checkOffMovieAtIndex(index: 0)
-        libraryTableView.delegate?.tableView?(libraryTableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+        libraryTableView.delegate?.tableView!(libraryTableView, didSelectRowAt: IndexPath(row: 0, section: 0))
         
         XCTAssertEqual(sut.movieManager?.moviesToSeeCount, 1)
         XCTAssertEqual(sut.movieManager?.moviesSeenCount, 1)
@@ -125,13 +116,11 @@ class MovieLibraryDataServiceTests: XCTestCase {
     }
     
     func testTableViewSectionTitles_ShouldHaveCorrectStringValues(){
-        
         let section1Title = libraryTableView.dataSource?.tableView!(libraryTableView, titleForHeaderInSection: 0)
         let section2Title = libraryTableView.dataSource?.tableView!(libraryTableView, titleForHeaderInSection: 1)
         
         XCTAssertEqual(section1Title, "Movies To See")
         XCTAssertEqual(section2Title, "Movies Seen")
-
     }
-
+    
 }
